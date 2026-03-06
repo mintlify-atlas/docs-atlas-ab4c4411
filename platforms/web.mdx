@@ -1,0 +1,241 @@
+---
+title: 'Web Platform'
+description: 'Play WPM Typing Tutor directly in your browser with Unity WebGL'
+icon: 'globe'
+---
+
+## Overview
+
+WPM Typing Tutor is available as a web application powered by **Unity WebGL**. Play directly in your browser without any downloads or installations required.
+
+<Note>
+  The web version uses Unity WebGL 2019.4.41f2 and requires a modern browser with WebGL support.
+</Note>
+
+## Browser Requirements
+
+<CardGroup cols={2}>
+  <Card title="Supported Browsers" icon="browser">
+    - Google Chrome (recommended)
+    - Mozilla Firefox
+    - Microsoft Edge
+    - Safari (macOS)
+  </Card>
+  <Card title="Graphics API" icon="microchip">
+    - WebGL 2.0 (preferred)
+    - WebGL 1.0 (fallback)
+  </Card>
+</CardGroup>
+
+### Minimum Requirements
+
+- **Browser**: Any modern browser with WebGL enabled
+- **RAM**: 4GB minimum, 8GB recommended
+- **Internet**: Broadband connection for initial load
+- **JavaScript**: Must be enabled
+
+<Warning>
+  Mobile browsers may have limited WebGL support. For mobile devices, use the native Android or iOS apps for best performance.
+</Warning>
+
+## How to Access
+
+<Steps>
+  <Step title="Open Your Browser">
+    Launch any supported web browser (Chrome recommended for best performance).
+  </Step>
+  
+  <Step title="Navigate to the Game">
+    Go to the WPM Typing Tutor web application URL or open `index.html` if running locally.
+  </Step>
+  
+  <Step title="Wait for Unity to Load">
+    The Unity WebGL runtime will automatically initialize. You'll see a loading progress bar while the game assets download.
+  </Step>
+  
+  <Step title="Start Playing">
+    Once loaded, click the "start_game --now" button to begin typing!
+  </Step>
+</Steps>
+
+## Technical Details
+
+### Unity WebGL Architecture
+
+The web version loads several critical files:
+
+```javascript
+UnityLoader.instantiate("unityContainer", "Build/INTEGRADORA.json", {
+  onProgress: UnityProgress
+});
+```
+
+### Build Files
+
+The following files are loaded from the `Build/` directory:
+
+| File | Purpose |
+|------|--------|
+| `INTEGRADORA.json` | Build configuration and asset manifest |
+| `INTEGRADORA.data.unityweb` | Game data and assets |
+| `INTEGRADORA.wasm.code.unityweb` | WebAssembly compiled game code |
+| `INTEGRADORA.wasm.framework.unityweb` | Unity WebGL runtime framework |
+| `UnityLoader.js` | Unity initialization script |
+
+<Accordion title="View Build Configuration">
+```json
+{
+  "companyName": "DefaultCompany",
+  "productName": "mecanografia",
+  "productVersion": "0.1",
+  "dataUrl": "INTEGRADORA.data.unityweb",
+  "wasmCodeUrl": "INTEGRADORA.wasm.code.unityweb",
+  "wasmFrameworkUrl": "INTEGRADORA.wasm.framework.unityweb",
+  "graphicsAPI": ["WebGL 2.0", "WebGL 1.0"],
+  "unityVersion": "2019.4.41f2"
+}
+```
+</Accordion>
+
+## Performance Optimization
+
+### Loading Times
+
+<Tip>
+  First-time load may take 10-30 seconds depending on your connection speed. Subsequent visits will be faster due to browser caching.
+</Tip>
+
+The game implements cache control with the `must-revalidate` policy to ensure you always have the latest version.
+
+### Graphics Settings
+
+The web build automatically selects the best graphics API:
+
+1. **WebGL 2.0** (preferred) - Better performance and features
+2. **WebGL 1.0** (fallback) - Broader compatibility
+
+### Performance Tips
+
+<CardGroup cols={2}>
+  <Card title="Close Other Tabs" icon="window-maximize">
+    Free up browser memory by closing unnecessary tabs while playing.
+  </Card>
+  <Card title="Use Hardware Acceleration" icon="rocket">
+    Enable hardware acceleration in your browser settings for smoother gameplay.
+  </Card>
+  <Card title="Update Your Browser" icon="arrow-up">
+    Keep your browser updated to the latest version for best WebGL performance.
+  </Card>
+  <Card title="Disable Extensions" icon="plug">
+    Some browser extensions may interfere with WebGL. Try disabling them if you experience issues.
+  </Card>
+</CardGroup>
+
+## Local Hosting
+
+<Info>
+  WPM Typing Tutor is open-source under the GNU General Public License. You can host it locally for testing or integration.
+</Info>
+
+### Quick Start
+
+```bash
+# Clone or download the project
+cd wpm-typing-tutor
+
+# Serve with any HTTP server
+python -m http.server 8000
+# or
+npx http-server -p 8000
+
+# Open in browser
+open http://localhost:8000
+```
+
+<Warning>
+  Unity WebGL requires an HTTP server - you cannot simply open `index.html` directly due to CORS restrictions.
+</Warning>
+
+## Keyboard Controls
+
+The web version supports all standard keyboard shortcuts:
+
+| Key | Action |
+|-----|--------|
+| `SPACE` | Start game |
+| `ESC` | Return to menu |
+| `F + J` | Home row position (index fingers) |
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Game Won't Load">
+    - Check that JavaScript is enabled
+    - Verify WebGL is supported: Visit `chrome://gpu` or `about:support` in Firefox
+    - Clear browser cache and reload
+    - Try a different browser
+  </Accordion>
+  
+  <Accordion title="Poor Performance">
+    - Close other applications and browser tabs
+    - Enable hardware acceleration in browser settings
+    - Update graphics drivers
+    - Try reducing browser zoom level to 100%
+  </Accordion>
+  
+  <Accordion title="Black Screen After Loading">
+    - Check browser console for errors (F12)
+    - Ensure all files in `Build/` directory are accessible
+    - Verify you're using an HTTP server (not file:// protocol)
+  </Accordion>
+  
+  <Accordion title="Typing Input Not Working">
+    - Click inside the game canvas to focus it
+    - Check keyboard layout is set to Spanish or English
+    - Disable browser extensions that may intercept keystrokes
+  </Accordion>
+</AccordionGroup>
+
+## Browser Compatibility Matrix
+
+| Browser | WebGL 2.0 | WebGL 1.0 | Status |
+|---------|-----------|-----------|--------|
+| Chrome 90+ | ✅ | ✅ | Fully Supported |
+| Firefox 88+ | ✅ | ✅ | Fully Supported |
+| Edge 90+ | ✅ | ✅ | Fully Supported |
+| Safari 14+ | ✅ | ✅ | Supported |
+| Opera 76+ | ✅ | ✅ | Supported |
+| Mobile Safari | ⚠️ | ✅ | Limited* |
+| Chrome Mobile | ⚠️ | ✅ | Limited* |
+
+<Note>
+  *Mobile browsers work but may have performance issues. Native mobile apps provide better experience.
+</Note>
+
+## Features
+
+<CardGroup cols={2}>
+  <Card title="Instant Play" icon="play">
+    No installation required - just open and play
+  </Card>
+  <Card title="Cross-Platform" icon="desktop">
+    Works on Windows, macOS, and Linux
+  </Card>
+  <Card title="Auto-Save Progress" icon="floppy-disk">
+    Scores saved in browser localStorage
+  </Card>
+  <Card title="Responsive Design" icon="mobile">
+    Adapts to different screen sizes
+  </Card>
+</CardGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Get Started" icon="rocket" href="/quickstart">
+    Learn how to play and improve your typing speed
+  </Card>
+  <Card title="Android App" icon="android" href="/platforms/android">
+    Install the native Android version via Expo Go
+  </Card>
+</CardGroup>

@@ -1,0 +1,329 @@
+---
+title: "Changelog"
+description: "Version history and feature releases for WPM Typing Tutor"
+icon: "clock-rotate-left"
+---
+
+# Version History
+
+Track the evolution of WPM Typing Tutor through our release history. This page documents all major features, improvements, and changes to the application.
+
+<Note>
+  WPM Typing Tutor is currently in version **0.1** (initial release) as part of a university capstone project developed in 2026.
+</Note>
+
+---
+
+## Version 0.1 (2026)
+
+<Card title="Initial Release" icon="rocket" iconType="duotone" color="#39d353">
+  The inaugural version of WPM Typing Tutor, featuring a complete typing training experience across multiple platforms.
+</Card>
+
+### Core Features
+
+<AccordionGroup>
+  <Accordion title="Unity WebGL Game Engine" icon="unity" defaultOpen>
+    Implemented the core typing game using Unity 2019.4.41f2 with WebGL export:
+    
+    - **Graphics API**: WebGL 2.0 and WebGL 1.0 fallback support
+    - **Product Version**: mecanografia v0.1
+    - **Build Type**: Development build for testing and iteration
+    - **Optimization**: Configured for web performance with preserved drawing buffer disabled
+    - **Canvas Integration**: Seamless embedding in HTML5 web pages
+    
+    ```javascript
+    UnityLoader.instantiate("unityContainer", "Build/INTEGRADORA.json", {
+      onProgress: UnityProgress
+    });
+    ```
+  </Accordion>
+  
+  <Accordion title="Three Difficulty Levels" icon="signal">
+    Adaptive difficulty system to accommodate all skill levels:
+    
+    <Steps>
+      <Step title="Easy Mode">
+        - Slower text scrolling speed
+        - Common words and simple phrases
+        - Perfect for beginners and learning proper finger placement
+        - Emphasis on accuracy over speed
+      </Step>
+      
+      <Step title="Medium Mode">
+        - Moderate text speed
+        - Mixed vocabulary with increased complexity
+        - Balanced challenge for improving typists
+        - Introduction to special characters
+      </Step>
+      
+      <Step title="Hard Mode">
+        - High-speed text delivery
+        - Complex words and technical terminology
+        - Advanced challenges for expert typists
+        - Full keyboard utilization including symbols
+      </Step>
+    </Steps>
+  </Accordion>
+  
+  <Accordion title="Global Ranking System" icon="ranking-star">
+    Competitive leaderboard with comprehensive statistics:
+    
+    | Rank | Player | WPM | Accuracy |
+    |------|--------|-----|----------|
+    | 🥇 1st | Vladi123 | **148** | 99% |
+    | 🥈 2nd | Marlon Montoya | **132** | 97% |
+    | 🥉 3rd | Marco GLs | **119** | 95% |
+    
+    Features:
+    - Real-time WPM calculation
+    - Accuracy percentage tracking
+    - Visual progress bars
+    - SQL-style data presentation
+    - Top 10 player display
+  </Accordion>
+  
+  <Accordion title="Touch Typing Training" icon="keyboard">
+    Comprehensive keyboard training system:
+    
+    **Home Row Focus**:
+    - Left hand: `A` `S` `D` `F●`
+    - Right hand: `●J` `K` `L` `Ñ`
+    - Index finger markers on F and J keys
+    
+    **Visual Aids**:
+    - Keyboard layout reference image
+    - Hand position diagrams
+    - Color-coded key assignments
+    - Video tutorial integration
+    
+    <Tip>
+      The `F` and `J` keys feature tactile bumps to help typists maintain proper home row position without looking at the keyboard.
+    </Tip>
+  </Accordion>
+  
+  <Accordion title="Terminal-Style Interface" icon="terminal">
+    Developer-inspired UI design:
+    
+    - **Color Scheme**: Dark terminal theme with `#0d0d0d` background
+    - **Typography**: JetBrains Mono monospace font family
+    - **Visual Effects**: Scanline overlay for retro CRT aesthetic
+    - **Navigation**: CLI-style commands and prompts
+    - **Animations**: Typewriter effect on home screen
+    - **Icons**: Terminal window controls (red/yellow/green dots)
+    
+    ```css
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    background: #0d0d0d;
+    color: #c8c8c8;
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Platform Support
+
+<CardGroup cols={3}>
+  <Card title="Web (Desktop)" icon="globe" color="#56d4dd">
+    ✅ **Fully Supported**
+    
+    - Any modern browser
+    - WebGL 2.0 / 1.0
+    - Responsive design
+    - Full feature set
+  </Card>
+  
+  <Card title="Android" icon="android" color="#e3c16f">
+    ✅ **Available via Expo**
+    
+    - React Native wrapper
+    - Expo Go runtime
+    - Touch-optimized
+    - Bluetooth keyboard support
+  </Card>
+  
+  <Card title="iOS" icon="apple" color="#555555">
+    ⭕ **Coming Soon**
+    
+    - Expo Go integration
+    - iOS optimization
+    - Apple device support
+  </Card>
+</CardGroup>
+
+### Technical Implementation
+
+<CodeGroup>
+```html HTML Structure
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>WPM — Mecanografía</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav>
+        <div class="nav-logo">wpm</div>
+        <div class="nav-links">
+            <a data-section="home">inicio</a>
+            <a data-section="game">jugar</a>
+            <!-- More navigation items -->
+        </div>
+    </nav>
+    <!-- Sections for each page -->
+</body>
+</html>
+```
+
+```javascript Navigation System
+function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => 
+        s.classList.remove('active')
+    );
+    document.getElementById(id).classList.add('active');
+    
+    // Lazy load Unity on game section
+    if (id === 'game' && !window.unityLoaded) {
+        window.unityLoaded = true;
+        UnityLoader.instantiate("unityContainer", "Build/INTEGRADORA.json");
+    }
+}
+```
+
+```css CSS Variables
+:root {
+    --bg:      #0d0d0d;
+    --surface: #111111;
+    --border:  #1f1f1f;
+    --text:    #c8c8c8;
+    --bright:  #efefef;
+    --green:   #39d353;
+    --yellow:  #e3c16f;
+    --cyan:    #56d4dd;
+}
+```
+</CodeGroup>
+
+### User Interface Sections
+
+<Steps>
+  <Step title="Home (Inicio)">
+    Terminal window with animated typewriter commands:
+    - Welcome message with project statistics
+    - Platform availability badges
+    - Quick start button
+    - Record WPM display: **148 WPM**
+  </Step>
+  
+  <Step title="Play (Jugar)">
+    Unity WebGL game container:
+    - 960px × 580px responsive canvas
+    - Keyboard shortcut indicators
+    - Real-time loading status
+    - Fullscreen-capable
+  </Step>
+  
+  <Step title="Instructions (Instrucciones)">
+    Step-by-step tutorial system:
+    - 3-step quick start guide
+    - Keyboard layout reference
+    - Hand position diagram
+    - Video tutorial link
+  </Step>
+  
+  <Step title="Ranking">
+    SQL-styled leaderboard table:
+    - Top 10 player rankings
+    - WPM and accuracy columns
+    - Visual progress bars
+    - Medal icons for top 3
+  </Step>
+  
+  <Step title="About (Acerca)">
+    README-style project information:
+    - Project metadata
+    - Author details
+    - Technology stack tags
+    - Copyright information
+  </Step>
+</Steps>
+
+### Performance & Optimization
+
+<CardGroup cols={2}>
+  <Card title="Loading Strategy" icon="gauge-high">
+    - Lazy loading of Unity WebGL
+    - Only initializes on game section visit
+    - Prevents unnecessary resource usage
+    - Faster initial page load
+  </Card>
+  
+  <Card title="Responsive Design" icon="mobile-screen">
+    - Mobile hamburger menu at < 700px
+    - Adaptive grid layouts
+    - Touch-optimized controls
+    - Hidden columns on small screens
+  </Card>
+</CardGroup>
+
+### Known Limitations
+
+<Warning>
+  **Version 0.1 Constraints**:
+  
+  - iOS support pending Expo Go configuration
+  - AR features not yet implemented (planned)
+  - Development build only (not production-optimized)
+  - Limited to 3 difficulty levels
+  - Single-player mode only
+</Warning>
+
+---
+
+## Upcoming Features
+
+<Info>
+  The following features are planned for future releases:
+</Info>
+
+<CardGroup cols={2}>
+  <Card title="Multiplayer Mode" icon="users">
+    Competitive typing races with friends
+  </Card>
+  
+  <Card title="AR Integration" icon="vr-cardboard">
+    Original AR typing vision using Unity AR Foundation
+  </Card>
+  
+  <Card title="Custom Word Lists" icon="list">
+    User-defined practice vocabularies
+  </Card>
+  
+  <Card title="Progress Tracking" icon="chart-line">
+    Historical performance analytics
+  </Card>
+  
+  <Card title="Achievement System" icon="trophy">
+    Badges and milestones for motivation
+  </Card>
+  
+  <Card title="Sound Effects" icon="volume">
+    Audio feedback for typing actions
+  </Card>
+</CardGroup>
+
+---
+
+## Release Information
+
+<Card title="Version 0.1 Details" icon="info-circle">
+  **Release Date**: 2026  
+  **Build Type**: Development  
+  **Unity Version**: 2019.4.41f2  
+  **Product**: mecanografia  
+  **Author**: Ramses Vladimir (MkillerLT/2411217041/Ramses0509)  
+  **License**: GNU General Public License  
+  
+  <Tip>
+    This release represents the complete university capstone project submission, demonstrating full-stack development capabilities across web, mobile, and game development platforms.
+  </Tip>
+</Card>

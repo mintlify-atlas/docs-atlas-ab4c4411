@@ -1,0 +1,360 @@
+---
+title: 'Android Platform'
+description: 'Install and play WPM Typing Tutor on Android devices using Expo Go'
+icon: 'android'
+---
+
+## Overview
+
+WPM Typing Tutor is available on Android devices through **React Native with Expo Go**. Experience native mobile performance optimized for touch and physical keyboards.
+
+<Note>
+  The Android version requires Expo Go app to be installed. This allows for rapid updates and seamless deployment.
+</Note>
+
+## Installation
+
+<Steps>
+  <Step title="Install Expo Go">
+    Download and install Expo Go from the Google Play Store.
+    
+    <Card title="Download Expo Go" icon="google-play" href="https://play.google.com/store/apps/details?id=host.exp.exponent">
+      Get Expo Go from Google Play Store
+    </Card>
+  </Step>
+  
+  <Step title="Get the Project Link">
+    Obtain the WPM Typing Tutor Expo project URL or QR code from your instructor or the project repository.
+  </Step>
+  
+  <Step title="Open in Expo Go">
+    Open Expo Go and either:
+    - Scan the QR code with your device camera
+    - Or enter the project URL manually in the Expo Go app
+  </Step>
+  
+  <Step title="Wait for Build">
+    Expo Go will download and build the app. This may take 30-60 seconds on first launch.
+  </Step>
+  
+  <Step title="Start Playing">
+    Once loaded, you can start practicing your typing immediately!
+  </Step>
+</Steps>
+
+## System Requirements
+
+### Minimum Requirements
+
+<CardGroup cols={2}>
+  <Card title="Android Version" icon="android">
+    Android 6.0 (Marshmallow) or higher
+  </Card>
+  <Card title="RAM" icon="memory">
+    2GB minimum, 4GB recommended
+  </Card>
+  <Card title="Storage" icon="hard-drive">
+    100MB free space for app + cache
+  </Card>
+  <Card title="Network" icon="wifi">
+    Internet connection (first launch only)
+  </Card>
+</CardGroup>
+
+### Recommended Specifications
+
+- **Android Version**: 8.0 (Oreo) or higher
+- **RAM**: 4GB or more
+- **Processor**: Quad-core 1.5GHz+
+- **Screen**: 5" or larger for comfortable typing
+
+<Tip>
+  For the best typing experience, use a device with a physical keyboard or connect an external Bluetooth keyboard.
+</Tip>
+
+## Features
+
+### Native Mobile Optimizations
+
+<CardGroup cols={2}>
+  <Card title="Touch Keyboard" icon="keyboard">
+    Fully responsive on-screen keyboard with haptic feedback
+  </Card>
+  <Card title="Bluetooth Keyboard" icon="bluetooth">
+    Full support for external keyboards
+  </Card>
+  <Card title="Portrait & Landscape" icon="mobile-screen">
+    Automatic orientation adjustment
+  </Card>
+  <Card title="Offline Mode" icon="cloud-arrow-down">
+    Play without internet after initial download
+  </Card>
+</CardGroup>
+
+### Android-Specific Features
+
+- **Native Performance**: Smooth 60 FPS gameplay
+- **Auto-Save**: Progress automatically saved locally
+- **Background Music**: Continue practicing with music support
+- **Battery Optimization**: Efficient resource usage
+
+## Using Expo Go
+
+### What is Expo Go?
+
+Expo Go is a free app that allows you to run React Native projects without building a standalone APK. It provides:
+
+<CardGroup cols={3}>
+  <Card title="Instant Updates" icon="rotate">
+    Get new features without reinstalling
+  </Card>
+  <Card title="Development Mode" icon="code">
+    Hot reloading for developers
+  </Card>
+  <Card title="Easy Distribution" icon="share-nodes">
+    Share via QR code or link
+  </Card>
+</CardGroup>
+
+### Launching the App
+
+#### Method 1: QR Code (Recommended)
+
+```bash
+# If you're running locally
+cd wpm-typing-tutor-mobile
+expo start
+```
+
+Then scan the QR code displayed in your terminal with Expo Go.
+
+#### Method 2: Direct Link
+
+Share the Expo project URL:
+
+```
+exp://your-expo-project-url
+```
+
+<Warning>
+  Both your development machine and Android device must be on the same WiFi network for local development.
+</Warning>
+
+## Keyboard Support
+
+### Touch Keyboard
+
+The Android on-screen keyboard is fully supported:
+
+- Auto-capitalization disabled for typing practice
+- Predictive text disabled for accuracy
+- Haptic feedback on keypress
+- Custom layout for Spanish/English
+
+### External Keyboards
+
+<Tip>
+  Connect a Bluetooth or USB-C keyboard for the most authentic typing practice experience!
+</Tip>
+
+Supported keyboard types:
+- Bluetooth keyboards (all standard layouts)
+- USB-C wired keyboards
+- USB OTG keyboards
+
+#### Keyboard Shortcuts
+
+| Key | Action |
+|-----|--------|
+| `SPACE` | Start game/Next word |
+| `ESC` / `Back Button` | Return to menu |
+| `F + J` | Home row reference |
+| `ENTER` | Confirm selection |
+
+## Performance Tips
+
+<CardGroup cols={2}>
+  <Card title="Close Background Apps" icon="x">
+    Free up RAM for smoother gameplay
+  </Card>
+  <Card title="Enable Performance Mode" icon="gauge-high">
+    Use your device's performance/gaming mode if available
+  </Card>
+  <Card title="Keep Expo Go Updated" icon="arrow-up">
+    Update Expo Go regularly for bug fixes
+  </Card>
+  <Card title="Clear Cache" icon="broom">
+    Clear Expo Go cache if experiencing issues
+  </Card>
+</CardGroup>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="App Won't Load">
+    1. Ensure you have the latest version of Expo Go installed
+    2. Check that you're connected to the internet (first launch)
+    3. Verify both devices are on the same WiFi (local development)
+    4. Try restarting Expo Go
+    5. Clear Expo Go cache: Settings → Apps → Expo Go → Storage → Clear Cache
+  </Accordion>
+  
+  <Accordion title="Keyboard Not Working">
+    1. Tap the screen to focus the input area
+    2. Disable autocorrect in Android keyboard settings
+    3. For external keyboards, check Bluetooth connection
+    4. Try switching keyboard language to English/Spanish
+    5. Restart the app
+  </Accordion>
+  
+  <Accordion title="Poor Performance">
+    1. Close other apps running in background
+    2. Disable battery saver mode
+    3. Ensure your Android version meets minimum requirements
+    4. Check available RAM (4GB recommended)
+    5. Update Expo Go to latest version
+  </Accordion>
+  
+  <Accordion title="Connection Issues">
+    1. Verify WiFi connection
+    2. Check firewall isn't blocking Expo
+    3. Try using LAN connection instead of tunnel
+    4. Restart your router
+    5. Try the published Expo link instead of local development
+  </Accordion>
+  
+  <Accordion title="Screen Rotation Problems">
+    1. Enable auto-rotate in Android quick settings
+    2. Check app doesn't have rotation lock
+    3. Restart the app
+    4. Some devices require manual rotation permission
+  </Accordion>
+</AccordionGroup>
+
+## Development Setup
+
+### For Developers
+
+If you want to modify and run your own version:
+
+<Steps>
+  <Step title="Install Prerequisites">
+    ```bash
+    # Install Node.js and npm
+    # Install Expo CLI
+    npm install -g expo-cli
+    ```
+  </Step>
+  
+  <Step title="Clone the Project">
+    ```bash
+    git clone [repository-url]
+    cd wpm-typing-tutor-mobile
+    npm install
+    ```
+  </Step>
+  
+  <Step title="Start Development Server">
+    ```bash
+    expo start
+    ```
+  </Step>
+  
+  <Step title="Test on Device">
+    Scan the QR code with Expo Go or use the Expo Go app to enter the URL.
+  </Step>
+</Steps>
+
+<Info>
+  The Android app uses React Native for cross-platform compatibility, allowing the same codebase to run on iOS.
+</Info>
+
+## Technical Architecture
+
+### Technology Stack
+
+- **Framework**: React Native
+- **Development Platform**: Expo Go
+- **Language**: JavaScript/TypeScript
+- **Navigation**: React Navigation
+- **State Management**: React Context/Hooks
+- **Storage**: AsyncStorage for local data
+
+### React Native Components
+
+The app leverages native Android components:
+
+```jsx
+import { View, TextInput, Keyboard } from 'react-native';
+
+// Native keyboard handling
+Keyboard.addListener('keyboardDidShow', handleKeyboard);
+```
+
+## Data & Privacy
+
+<CardGroup cols={2}>
+  <Card title="Local Storage" icon="database">
+    All typing data stored locally on device
+  </Card>
+  <Card title="No Account Required" icon="user-slash">
+    Play anonymously without registration
+  </Card>
+  <Card title="Offline Play" icon="plane">
+    Full functionality without internet
+  </Card>
+  <Card title="No Tracking" icon="shield">
+    No analytics or user tracking
+  </Card>
+</CardGroup>
+
+## Updates & Versions
+
+<Note>
+  The Expo Go version receives automatic updates. Simply restart the app to get the latest version.
+</Note>
+
+### Update Process
+
+1. App checks for updates on launch
+2. Downloads new bundle if available
+3. Applies update automatically
+4. No manual update required
+
+## Comparison: Expo Go vs Standalone APK
+
+| Feature | Expo Go | Standalone APK |
+|---------|---------|----------------|
+| Installation | Via Expo Go app | Direct APK install |
+| Size | ~50MB | ~200MB |
+| Updates | Automatic | Manual download |
+| Distribution | QR code/Link | APK file |
+| Performance | Good | Slightly better |
+| Offline | After first load | Fully offline |
+
+<Tip>
+  For classroom or institutional use, Expo Go is ideal due to easy distribution and automatic updates.
+</Tip>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Getting Started" icon="play" href="/quickstart">
+    Learn how to use the app and improve your typing
+  </Card>
+  <Card title="iOS Version" icon="apple" href="/platforms/ios">
+    Check out the iOS version for iPhone/iPad
+  </Card>
+  <Card title="Web Version" icon="globe" href="/platforms/web">
+    Try the browser-based version
+  </Card>
+  <Card title="How to Play" icon="circle-question" href="/guides/how-to-play">
+    Get help with common issues
+  </Card>
+</CardGroup>
+
+## Community & Support
+
+<Card title="Report Issues" icon="bug">
+  Found a bug? Report it on the project's GitHub repository.
+</Card>

@@ -1,0 +1,182 @@
+---
+title: "Project Overview"
+description: "Learn about WPM Typing Tutor, a university project developed to help users improve their typing speed and accuracy"
+icon: "flag"
+---
+
+# WPM Typing Tutor Project
+
+WPM Typing Tutor is a comprehensive **Proyecto Integrador Universitario** (University Capstone Project) developed in 2026 by Ramses Vladimir. The project aims to provide an engaging, multi-platform typing training experience using modern web and mobile technologies.
+
+## Project Information
+
+<CardGroup cols={2}>
+  <Card title="Project Name" icon="keyboard">
+    WPM — Juego de Mecanografía
+    
+    (WPM Typing Game)
+  </Card>
+  
+  <Card title="Author" icon="user">
+    Ramses Vladimir
+    
+    MkillerLT/2411217041/Ramses0509
+  </Card>
+  
+  <Card title="Project Type" icon="graduation-cap">
+    Proyecto Integrador Universitario
+    
+    University Capstone Project
+  </Card>
+  
+  <Card title="Year" icon="calendar">
+    2026
+  </Card>
+</CardGroup>
+
+## Purpose & Vision
+
+The primary goal of this project is to create an interactive typing tutor that helps users improve their **Words Per Minute (WPM)** and typing accuracy through gamification. Originally conceived as a Unity-based AR typing experience, the project has evolved into a robust multi-platform application.
+
+<Note>
+  The project was initially designed for AR (Augmented Reality) but is currently implemented as a WebGL-based web application with mobile support through React Native and Expo Go.
+</Note>
+
+## Key Features
+
+<AccordionGroup>
+  <Accordion title="Multi-Platform Support" icon="devices">
+    - **Web**: Unity WebGL implementation accessible from any modern browser
+    - **Android**: React Native + Expo Go integration
+    - **iOS**: React Native + Expo Go integration (coming soon)
+  </Accordion>
+  
+  <Accordion title="Difficulty Levels" icon="signal">
+    Three carefully balanced difficulty levels:
+    - **Easy**: Perfect for beginners learning proper finger placement
+    - **Medium**: Intermediate challenges with increased speed requirements
+    - **Hard**: Advanced typing with complex words and maximum speed
+  </Accordion>
+  
+  <Accordion title="Global Leaderboard" icon="ranking-star">
+    Competitive ranking system tracking:
+    - Words Per Minute (WPM) scores
+    - Accuracy percentages
+    - Current record: **148 WPM at 99% accuracy** by Vladi123
+  </Accordion>
+  
+  <Accordion title="Touch Typing Training" icon="hand">
+    Comprehensive keyboard training focusing on:
+    - Home row positioning (F and J keys)
+    - Proper finger placement for each key
+    - Building muscle memory through repetition
+  </Accordion>
+</AccordionGroup>
+
+## Technical Stack
+
+<CardGroup cols={3}>
+  <Card title="Unity WebGL" icon="unity" color="#ea4aaa">
+    Version: 2019.4.41f2
+    
+    Core game engine for typing mechanics
+  </Card>
+  
+  <Card title="React Native" icon="react" color="#61dafb">
+    Mobile application framework
+  </Card>
+  
+  <Card title="Expo Go" icon="mobile" color="#000020">
+    Cross-platform mobile runtime
+  </Card>
+  
+  <Card title="HTML/CSS/JS" icon="code" color="#e34c26">
+    Web interface and styling
+  </Card>
+  
+  <Card title="WebGL API" icon="cube" color="#990000">
+    Graphics: WebGL 2.0 & 1.0
+  </Card>
+  
+  <Card title="JetBrains Mono" icon="font" color="#666666">
+    Monospace font for terminal aesthetic
+  </Card>
+</CardGroup>
+
+### Unity Configuration
+
+The Unity build uses the following specifications:
+
+```json
+{
+  "productName": "mecanografia",
+  "productVersion": "0.1",
+  "unityVersion": "2019.4.41f2",
+  "graphicsAPI": ["WebGL 2.0", "WebGL 1.0"],
+  "developmentBuild": true
+}
+```
+
+## License
+
+<Card title="GNU General Public License" icon="scale-balanced" iconType="solid">
+  This project is distributed under the **GNU General Public License**, allowing you to:
+  
+  - Host locally for testing and development
+  - Integrate into other projects
+  - Modify and distribute with attribution
+  
+  <Warning>
+    When using this project, ensure compliance with GPL requirements including source code availability and license preservation.
+  </Warning>
+</Card>
+
+## Project Structure
+
+The application consists of several key sections:
+
+1. **Inicio (Home)**: Terminal-styled landing page with typewriter effect
+2. **Jugar (Play)**: Unity WebGL game instance
+3. **Instrucciones (Instructions)**: Step-by-step typing tutorials
+4. **Ranking**: Global leaderboard with SQL-style interface
+5. **Acerca (About)**: README-style project information
+
+<Tip>
+  The interface uses a dark terminal aesthetic with JetBrains Mono font, creating a developer-friendly experience that appeals to both beginners and advanced typists.
+</Tip>
+
+## Design Philosophy
+
+The project embraces a **terminal-inspired aesthetic** with:
+
+- Dark mode color scheme (`#0d0d0d` background)
+- Monospace typography (JetBrains Mono)
+- CLI-style navigation and commands
+- Scanline visual effects for retro appeal
+- Green accent colors for terminal authenticity
+
+## Current Status
+
+<Steps>
+  <Step title="Web Version">
+    ✅ Fully functional Unity WebGL implementation deployed
+  </Step>
+  
+  <Step title="Android Support">
+    ✅ React Native + Expo Go integration available
+  </Step>
+  
+  <Step title="iOS Support">
+    🚧 Coming soon via Expo Go
+  </Step>
+  
+  <Step title="AR Features">
+    📋 Planned for future releases
+  </Step>
+</Steps>
+
+---
+
+<Info>
+  **Universidad Project**: This typing tutor was created as a comprehensive university capstone project, demonstrating proficiency in game development, web technologies, and cross-platform mobile development.
+</Info>

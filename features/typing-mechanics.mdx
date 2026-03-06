@@ -1,0 +1,453 @@
+---
+title: 'Typing Mechanics'
+description: 'How WPM is calculated, accuracy tracking, and understanding error penalties'
+icon: 'keyboard'
+---
+
+## Overview
+
+Understanding the typing mechanics in WPM Typing Tutor is essential for improving your performance and achieving high scores. This guide explains how your typing speed is measured, how accuracy is tracked, and the critical impact of errors on your final score.
+
+<Info>
+  The game uses industry-standard WPM (Words Per Minute) calculations and implements realistic error penalties to encourage both speed and accuracy.
+</Info>
+
+## WPM (Words Per Minute) Calculation
+
+### What is WPM?
+
+Words Per Minute (WPM) is the universal metric for measuring typing speed. It represents how many words you can type in one minute, with adjustments for errors.
+
+<Accordion title="The Standard WPM Formula">
+  The typing industry uses this standardized formula:
+  
+  ```javascript
+  WPM = (Total Characters Typed / 5) / (Time in Minutes)
+  ```
+  
+  **Why divide by 5?**  
+  The standard English word is defined as 5 characters for typing measurement purposes. This includes letters, spaces, and punctuation.
+</Accordion>
+
+### Example Calculation
+
+Let's calculate WPM for a typical typing session:
+
+<Steps>
+  <Step title="Count Characters">
+    Suppose you typed: `"The quick brown fox jumps over the lazy dog."`
+    
+    Total characters: 44 (including spaces and punctuation)
+  </Step>
+  
+  <Step title="Measure Time">
+    Time taken: 15 seconds = 0.25 minutes
+  </Step>
+  
+  <Step title="Apply Formula">
+    ```javascript
+    WPM = (44 / 5) / 0.25
+    WPM = 8.8 / 0.25
+    WPM = 35.2
+    ```
+    Your raw typing speed is **35 WPM**
+  </Step>
+</Steps>
+
+<Note>
+  This is your **raw WPM** before error penalties. Your final WPM score will be lower if you made typing mistakes.
+</Note>
+
+## Accuracy Tracking
+
+Accuracy measures how precisely you type without errors. It's displayed as a percentage on the leaderboard.
+
+### How Accuracy is Calculated
+
+```javascript
+accuracy = ((totalCharacters - errorCount) / totalCharacters) * 100
+```
+
+<CardGroup cols={3}>
+  <Card title="Excellent" icon="circle-check" color="#39d353">
+    **95-100% accuracy**  
+    Professional level
+  </Card>
+  <Card title="Good" icon="circle" color="#e3c16f">
+    **90-94% accuracy**  
+    Competent level
+  </Card>
+  <Card title="Needs Work" icon="circle-xmark" color="#ff5f56">
+    **Below 90%**  
+    Focus on accuracy
+  </Card>
+</CardGroup>
+
+### Real Examples from Leaderboard
+
+Let's analyze the top players' accuracy:
+
+| Player | WPM | Accuracy | Interpretation |
+|--------|-----|----------|----------------|
+| Vladi123 | 148 | 99% | Nearly perfect - only 1 error per 100 characters |
+| Marlon Montoya | 132 | 97% | Excellent - 3 errors per 100 characters |
+| Marco GLs | 119 | 95% | Very good - 5 errors per 100 characters |
+
+<Tip>
+  Notice that top leaderboard players maintain 95%+ accuracy even at extremely high speeds. This balance between speed and precision is key to competitive performance.
+</Tip>
+
+## Error Penalties
+
+Errors significantly impact your final WPM score. The penalty system encourages accuracy while allowing for natural typing mistakes.
+
+### How Errors Reduce Your Score
+
+<Warning>
+  **Critical:** Each error reduces your final WPM score. The exact penalty increases with difficulty level.
+</Warning>
+
+The error penalty formula:
+
+```javascript
+finalWPM = rawWPM - (numberOfErrors * errorPenaltyMultiplier)
+```
+
+### Penalty by Difficulty Level
+
+<AccordionGroup>
+  <Accordion title="Fácil (Easy) - Lenient Penalties">
+    - **Lower penalty per error**
+    - Designed to encourage learning
+    - Focus on building proper technique
+    - Errors are teaching opportunities
+    
+    Example: An error might reduce your score by 1-2 WPM
+  </Accordion>
+  
+  <Accordion title="Medio (Medium) - Standard Penalties">
+    - **Moderate penalty per error**
+    - Balanced risk/reward system
+    - Encourages careful typing
+    - Realistic typing conditions
+    
+    Example: An error might reduce your score by 3-4 WPM
+  </Accordion>
+  
+  <Accordion title="Difícil (Hard) - Severe Penalties">
+    - **High penalty per error**
+    - Demands precision at speed
+    - Competitive environment
+    - Unforgiving of mistakes
+    
+    Example: An error might reduce your score by 5-7 WPM
+  </Accordion>
+</AccordionGroup>
+
+### Why Error Penalties Matter
+
+Consider this scenario comparing two typing sessions:
+
+<CodeGroup>
+```javascript Session A - Fast but Inaccurate
+rawWPM = 150
+errors = 20
+errorPenalty = 20 * 5  // Hard difficulty
+finalWPM = 150 - 100 = 50 WPM
+accuracy = 85%
+```
+
+```javascript Session B - Moderate and Accurate  
+rawWPM = 120
+errors = 3
+errorPenalty = 3 * 5  // Hard difficulty
+finalWPM = 120 - 15 = 105 WPM
+accuracy = 97%
+```
+</CodeGroup>
+
+<Note>
+  **Session B wins!** Despite typing slower initially, the higher accuracy resulted in a much better final score. This demonstrates why accuracy is crucial.
+</Note>
+
+## Types of Typing Errors
+
+The game tracks several types of errors:
+
+### 1. Wrong Character
+
+Typing an incorrect letter for the expected character.
+
+```bash
+Expected: "hello"
+Typed:    "hwllo"
+Error:    ^ wrong character (w instead of e)
+```
+
+### 2. Extra Character
+
+Typing additional characters that shouldn't be there.
+
+```bash
+Expected: "world"
+Typed:    "worrld"
+Error:      ^ extra character (double r)
+```
+
+### 3. Missing Character
+
+Skipping a required character.
+
+```bash
+Expected: "typing"
+Typed:    "typin"
+Error:          ^ missing character (g)
+```
+
+### 4. Wrong Case
+
+Incorrect capitalization (uppercase vs lowercase).
+
+```bash
+Expected: "Swift"
+Typed:    "swift"
+Error:    ^ wrong case (should be uppercase S)
+```
+
+<Info>
+  Each error type is weighted equally in the penalty calculation. The game doesn't distinguish between types when calculating your final score.
+</Info>
+
+## Home Row Keys
+
+Proper finger positioning is essential for maximizing both speed and accuracy.
+
+### The Home Row Position
+
+Your index fingers should rest on the **F** and **J** keys (marked with small bumps on most keyboards).
+
+<CardGroup cols={2}>
+  <Card title="Left Hand" icon="hand" color="#56d4dd">
+    **Index finger:** F ●  
+    **Middle finger:** D  
+    **Ring finger:** S  
+    **Pinky finger:** A
+  </Card>
+  <Card title="Right Hand" icon="hand" color="#e3c16f">
+    **Index finger:** ● J  
+    **Middle finger:** K  
+    **Ring finger:** L  
+    **Pinky finger:** Ñ (Spanish layout)
+  </Card>
+</CardGroup>
+
+<Tip>
+  The game reminds you of home row positioning with the keyboard shortcut:
+  <kbd>F</kbd> + <kbd>J</kbd> = Index finger home position
+</Tip>
+
+### Why Home Row Matters
+
+Proper home row technique provides:
+
+- **Faster typing**: Less hand movement means more speed
+- **Better accuracy**: Muscle memory reduces errors
+- **Reduced fatigue**: Efficient hand positioning prevents strain
+- **Scalability**: Technique works at any speed from 40 to 150+ WPM
+
+<Warning>
+  Poor finger positioning is the #1 reason people plateau in typing speed. Master the home row before attempting to increase speed.
+</Warning>
+
+## Game Controls and Timing
+
+Understanding when timing starts and stops is crucial for strategy:
+
+### Control Keys
+
+| Key | Function | Timing Impact |
+|-----|----------|---------------|
+| <kbd>SPACE</kbd> | Start game | Timer begins |
+| <kbd>ESC</kbd> | Exit to menu | Timer stops, score calculated |
+| <kbd>F</kbd> <kbd>J</kbd> | Home row reference | No impact |
+
+### Timing Rules
+
+<Steps>
+  <Step title="Game Start">
+    Press <kbd>SPACE</kbd> to begin. The timer starts immediately, and text begins scrolling based on your selected difficulty.
+  </Step>
+  
+  <Step title="Active Typing">
+    Type as quickly and accurately as possible. Every character is tracked for the final calculation.
+  </Step>
+  
+  <Step title="Game End">
+    Either complete the text or press <kbd>ESC</kbd>. Timer stops and your WPM/accuracy are calculated instantly.
+  </Step>
+</Steps>
+
+## Optimizing Your Performance
+
+Follow these strategies to maximize your WPM while maintaining high accuracy:
+
+<AccordionGroup>
+  <Accordion title="Strategy 1: Start Slow, Build Speed">
+    Begin at a comfortable pace where you can maintain 98%+ accuracy. Gradually increase speed over multiple sessions while keeping accuracy above 95%.
+    
+    ```bash
+    Week 1-2: Focus on 95%+ accuracy at any speed
+    Week 3-4: Increase speed by 5-10 WPM while maintaining accuracy
+    Week 5+:  Continue incremental speed increases
+    ```
+  </Accordion>
+  
+  <Accordion title="Strategy 2: Practice Problem Keys">
+    Track which keys cause you the most errors. Practice those specific keys outside of timed sessions.
+    
+    Common problem keys:
+    - Q, P (edge keys requiring pinky reach)
+    - B, Y (keys requiring index finger stretches)
+    - Special characters and numbers
+  </Accordion>
+  
+  <Accordion title="Strategy 3: Use Proper Rhythm">
+    Type in a steady rhythm rather than in bursts. Consistent pacing reduces errors and prevents fatigue.
+    
+    Think of typing like playing music - maintain tempo.
+  </Accordion>
+  
+  <Accordion title="Strategy 4: Don't Look at the Keyboard">
+    Force yourself to touch type without looking down. This develops muscle memory and significantly increases long-term speed potential.
+    
+    Cover your hands with a cloth if needed to break the looking habit.
+  </Accordion>
+</AccordionGroup>
+
+## Progress Tracking
+
+Monitor these metrics to track improvement:
+
+<CardGroup cols={2}>
+  <Card title="WPM Growth" icon="chart-line">
+    Track your average WPM over time. Expect 5-10 WPM improvement per month with regular practice.
+  </Card>
+  <Card title="Accuracy Trend" icon="bullseye">
+    Monitor accuracy percentage. Should stay above 95% as you increase speed.
+  </Card>
+  <Card title="Error Patterns" icon="triangle-exclamation">
+    Identify which keys cause most errors. Target these in practice sessions.
+  </Card>
+  <Card title="Difficulty Progression" icon="stairs">
+    Track when you successfully transition from Easy → Medium → Hard.
+  </Card>
+</CardGroup>
+
+## Advanced Techniques
+
+Once you've mastered the basics, consider these advanced strategies:
+
+### Anticipatory Typing
+
+Read ahead in the text to prepare your fingers for upcoming letter combinations.
+
+```javascript
+// Instead of: [read] → [type] → [read] → [type]
+// Do this:    [read ahead] → [type continuously]
+```
+
+### Common Bigrams
+
+Practice common two-letter combinations (bigrams) to build speed:
+
+- `th`, `he`, `in`, `er`, `an`, `re`, `on`, `at`, `en`, `nd`
+
+These represent a large percentage of English text.
+
+### Reducing Cognitive Load
+
+Focus on the text, not your fingers. Trust your muscle memory:
+
+<Note>
+  Expert typists (100+ WPM) don't think about individual keystrokes. They see words as complete units and their fingers execute automatically.
+</Note>
+
+## Common Mistakes to Avoid
+
+<Warning>
+  **Don't do these:**
+  
+  ❌ Sacrificing accuracy for speed  
+  ❌ Looking at the keyboard while typing  
+  ❌ Using incorrect finger assignments  
+  ❌ Typing in bursts instead of steady rhythm  
+  ❌ Practicing only at high speeds  
+  ❌ Ignoring error patterns
+</Warning>
+
+<Tip>
+  **Do these instead:**
+  
+  ✅ Maintain 95%+ accuracy always  
+  ✅ Keep eyes on screen  
+  ✅ Use proper home row positioning  
+  ✅ Type with consistent rhythm  
+  ✅ Practice at multiple speeds  
+  ✅ Analyze and correct errors
+</Tip>
+
+## Real Performance Analysis
+
+Let's analyze how the top leaderboard player achieved 148 WPM:
+
+```javascript
+// Vladi123's estimated session:
+rawWPM = 150  // Extremely fast typing
+errors = 2    // Only 2 mistakes in entire session
+errorPenalty = 2 * 1  // Minimal penalty due to high accuracy
+finalWPM = 148
+accuracy = 99%
+
+// This demonstrates:
+// 1. Exceptional raw speed (150 WPM)
+// 2. Near-perfect accuracy (99%)
+// 3. Minimal score loss to penalties (only 2 WPM)
+```
+
+<Info>
+  To compete at this level requires hundreds of hours of practice and mastery of touch typing fundamentals.
+</Info>
+
+## Practice Recommendations
+
+For optimal improvement, follow this practice schedule:
+
+| Experience Level | Daily Practice | Focus Area | Target WPM |
+|-----------------|----------------|------------|------------|
+| Beginner | 15-20 min | Accuracy, home row | 40+ WPM |
+| Intermediate | 20-30 min | Speed building | 70+ WPM |
+| Advanced | 30-45 min | Competitive performance | 100+ WPM |
+| Expert | 45-60 min | Record attempts | 130+ WPM |
+
+<Tip>
+  Quality practice beats quantity. 20 minutes of focused practice with proper technique is better than 2 hours of careless typing.
+</Tip>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Difficulty Levels" icon="gauge-high" href="/features/difficulty-levels">
+    Choose the right difficulty to practice effectively
+  </Card>
+  <Card title="Leaderboard" icon="trophy" href="/features/leaderboard">
+    Compete globally and track your ranking progress
+  </Card>
+</CardGroup>
+
+## Additional Resources
+
+For more typing technique guidance:
+
+<Card title="Video Tutorial" icon="video" href="https://www.youtube.com/watch?v=lcxkRC1kTvQ">
+  Watch a complete tutorial on proper typing technique and home row positioning
+</Card>

@@ -1,0 +1,403 @@
+---
+title: Unity Setup & Configuration
+description: Understanding the Unity WebGL project structure, build configuration, and technical specifications for WPM Typing Tutor
+---
+
+## Overview
+
+WPM Typing Tutor is built using **Unity 2019.4.41f2 LTS** and compiled to WebGL for browser-based gameplay. This page covers the Unity project structure, build settings, and WebGL configuration used in the game.
+
+<Info>
+  **Unity Version**: 2019.4.41f2 LTS
+  
+  **Target Platform**: WebGL (browsers)
+  
+  **Company**: DefaultCompany
+  
+  **Product Name**: mecanografia
+</Info>
+
+## Unity Project Information
+
+The game is configured with the following project settings:
+
+```json Build Configuration
+{
+  "companyName": "DefaultCompany",
+  "productName": "mecanografia",
+  "productVersion": "0.1",
+  "unityVersion": "2019.4.41f2",
+  "developmentBuild": true
+}
+```
+
+<Note>
+  The project is currently set to `developmentBuild: true`, which enables console logging and debugging features. For production deployments, consider setting this to `false`.
+</Note>
+
+## WebGL Build Configuration
+
+### Graphics API Support
+
+The game supports both modern and legacy WebGL implementations:
+
+<Tabs>
+  <Tab title="WebGL 2.0">
+    Primary graphics API with better performance and features. Supported by:
+    - Chrome 56+
+    - Firefox 51+
+    - Edge 79+
+    - Safari 15+
+  </Tab>
+  <Tab title="WebGL 1.0">
+    Fallback graphics API for older browsers. Provides wider compatibility but with reduced features and performance.
+  </Tab>
+</Tabs>
+
+```json GraphicsAPI Configuration
+{
+  "graphicsAPI": ["WebGL 2.0", "WebGL 1.0"],
+  "webglContextAttributes": {
+    "preserveDrawingBuffer": false
+  },
+  "backgroundColor": "#231F20",
+  "multithreading": false
+}
+```
+
+### Build Artifacts
+
+The Unity build process generates the following files:
+
+<Steps>
+  <Step title="INTEGRADORA.json">
+    **Size**: ~530 bytes
+    
+    Main configuration file containing build metadata, Unity version, and loader settings. This file is loaded first by `UnityLoader.js` to initialize the game.
+  </Step>
+  
+  <Step title="INTEGRADORA.data.unityweb">
+    **Size**: ~5.5 MB (compressed)
+    
+    Contains game assets including:
+    - Scenes and scene data
+    - Sprites and textures
+    - Audio files
+    - Text assets and levels
+    - Resource files
+    
+    Uses Gzip or Brotli compression with Unity's custom marker for web optimization.
+  </Step>
+  
+  <Step title="INTEGRADORA.wasm.code.unityweb">
+    **Size**: ~14.6 MB (compressed)
+    
+    WebAssembly code module containing:
+    - Compiled C# scripts
+    - Unity engine runtime
+    - Game logic and mechanics
+    - Physics and rendering systems
+    
+    This is the largest file and benefits most from compression.
+  </Step>
+  
+  <Step title="INTEGRADORA.wasm.framework.unityweb">
+    **Size**: ~1.1 MB (compressed)
+    
+    WebAssembly framework file providing:
+    - Unity runtime framework
+    - Core engine systems
+    - Platform abstraction layer
+    - Memory management
+  </Step>
+</Steps>
+
+<Warning>
+  **Total compressed size**: ~21 MB
+  
+  Ensure your hosting environment supports serving compressed `.unityweb` files with appropriate MIME types and compression headers.
+</Warning>
+
+## UnityLoader System
+
+The Unity WebGL loader handles game initialization, asset loading, and browser compatibility checking.
+
+### Compression Support
+
+UnityLoader includes built-in decompression for:
+
+<CodeGroup>
+```javascript Gzip Decompression
+// UnityLoader automatically detects Gzip compressed files
+// by checking for Unity's custom marker
+compression: {
+  gzip: {
+    hasUnityMarker: true,
+    expectedComment: "UnityWeb Compressed Content (gzip)"
+  }
+}
+```
+
+```javascript Brotli Decompression
+// Brotli provides better compression ratios than Gzip
+// but requires browser support
+compression: {
+  brotli: {
+    hasUnityMarker: true,
+    expectedComment: "UnityWeb Compressed Content (brotli)"
+  }
+}
+```
+</CodeGroup>
+
+### Loading Process
+
+<Steps>
+  <Step title="Initialize UnityLoader">
+    The `UnityLoader.js` script is loaded first, providing the core loading functionality.
+    
+    ```html
+    <script src="Build/UnityLoader.js"></script>
+    ```
+  </Step>
+  
+  <Step title="Instantiate Game">
+    Call `UnityLoader.instantiate()` with the container and config:
+    
+    ```javascript
+    UnityLoader.instantiate("unityContainer", "Build/INTEGRADORA.json", {
+      onProgress: UnityProgress
+    });
+    ```
+  </Step>
+  
+  <Step title="Download & Decompress">
+    UnityLoader downloads and decompresses the `.unityweb` files:
+    - Detects compression type (Gzip/Brotli/none)
+    - Downloads files asynchronously
+    - Decompresses using Web Workers
+    - Reports progress to callback
+  </Step>
+  
+  <Step title="Initialize WebGL Context">
+    Creates the WebGL context with specified attributes:
+    - Selects WebGL 2.0 or 1.0 based on browser support
+    - Initializes canvas element
+    - Sets up rendering context
+  </Step>
+  
+  <Step title="Start Game">
+    Transfers control to the Unity runtime:
+    - Loads game scenes
+    - Initializes game systems
+    - Begins main game loop
+  </Step>
+</Steps>
+
+## Browser Compatibility
+
+### System Requirements
+
+<Tabs>
+  <Tab title="Supported Browsers">
+    **Fully Supported:**
+    - Chrome 56+ (recommended)
+    - Firefox 51+
+    - Edge 79+
+    - Safari 15+
+    
+    **Limited Support:**
+    - Safari 10.1-14.x (WebGL 1.0 only)
+    - Older Firefox/Chrome versions (performance issues)
+  </Tab>
+  
+  <Tab title="Not Supported">
+    **Not Supported:**
+    - Internet Explorer (any version)
+    - Mobile browsers (use React Native app instead)
+    - Opera Mini
+    - Very old browser versions without WebGL
+  </Tab>
+</Tabs>
+
+### Compatibility Checking
+
+UnityLoader includes automatic compatibility detection:
+
+```javascript Compatibility Detection
+// Checks performed by UnityLoader:
+- Browser supports WebGL
+- Browser supports required graphics API (WebGL 1.0 or 2.0)
+- Browser supports WebAssembly
+- Multithreading support (if enabled)
+- Sufficient memory available
+```
+
+<Note>
+  The loader displays user-friendly error messages if the browser doesn't meet requirements, with suggestions to upgrade or switch browsers.
+</Note>
+
+## Development vs Production
+
+### Development Build
+
+The current configuration uses a development build:
+
+```json
+{
+  "developmentBuild": true
+}
+```
+
+**Development builds include:**
+- Console logging and debug output
+- Unity Profiler support
+- Symbol information for debugging
+- Unoptimized code for faster iteration
+
+### Production Build Recommendations
+
+For production deployment, modify the build configuration:
+
+<Steps>
+  <Step title="Disable Development Build">
+    In Unity Build Settings, uncheck "Development Build"
+    
+    ```json
+    {
+      "developmentBuild": false
+    }
+    ```
+  </Step>
+  
+  <Step title="Enable Code Optimization">
+    Set code optimization to "Master" or "Release" in build settings for:
+    - Smaller file sizes
+    - Better performance
+    - No debug symbols
+  </Step>
+  
+  <Step title="Configure Compression">
+    Choose compression method in Unity Player Settings:
+    - **Brotli**: Best compression (~30% better than Gzip)
+    - **Gzip**: Good compatibility, decent compression
+    - **Disabled**: Fastest loading but largest files
+  </Step>
+  
+  <Step title="Strip Engine Code">
+    Enable code stripping to remove unused Unity features:
+    - Reduces build size significantly
+    - Removes unused engine modules
+    - Keep only required functionality
+  </Step>
+</Steps>
+
+<Warning>
+  Always test production builds thoroughly before deployment. Production builds may behave differently than development builds.
+</Warning>
+
+## Error Handling
+
+### Common Build Errors
+
+<AccordionGroup>
+  <Accordion title="WebGL not supported" icon="triangle-exclamation">
+    **Error**: Browser does not support WebGL
+    
+    **Solution**: 
+    - Upgrade to a modern browser
+    - Enable hardware acceleration
+    - Update graphics drivers
+    - Check if WebGL is disabled in browser settings
+  </Accordion>
+  
+  <Accordion title="Out of memory" icon="memory">
+    **Error**: Cannot allocate enough memory for WebGL content
+    
+    **Solution**:
+    - Close other browser tabs
+    - Restart browser
+    - Reduce WebGL memory allocation in Unity Player Settings
+    - Use a 64-bit browser
+  </Accordion>
+  
+  <Accordion title="Failed to download" icon="download">
+    **Error**: Failed to download .unityweb files
+    
+    **Solution**:
+    - Check network connection
+    - Verify server is running and accessible
+    - Check CORS headers on server
+    - Verify file paths in INTEGRADORA.json
+  </Accordion>
+  
+  <Accordion title="Decompression failed" icon="file-zipper">
+    **Error**: Failed to decompress build files
+    
+    **Solution**:
+    - Verify files are not corrupted
+    - Check server compression settings
+    - Ensure Unity build completed successfully
+    - Try different compression method (Gzip vs Brotli)
+  </Accordion>
+</AccordionGroup>
+
+## Performance Optimization
+
+### Loading Performance
+
+<CardGroup cols={2}>
+  <Card title="Enable Compression" icon="file-zipper">
+    Use Brotli compression for ~30% smaller files than Gzip. Configure in Unity WebGL Player Settings.
+  </Card>
+  
+  <Card title="Server Configuration" icon="server">
+    Configure your web server to:
+    - Serve .unityweb files pre-compressed
+    - Set proper MIME types
+    - Enable HTTP/2 for parallel loading
+    - Use CDN for global distribution
+  </Card>
+  
+  <Card title="Code Stripping" icon="scissors">
+    Enable "Strip Engine Code" in Player Settings to remove unused Unity engine features and reduce build size.
+  </Card>
+  
+  <Card title="Asset Optimization" icon="image">
+    Optimize game assets:
+    - Compress textures
+    - Use sprite atlases
+    - Reduce audio quality for non-critical sounds
+    - Remove unused assets
+  </Card>
+</CardGroup>
+
+### Runtime Performance
+
+```javascript Performance Tips
+// Unity WebGL performance considerations:
+- Use object pooling to reduce garbage collection
+- Minimize draw calls with sprite atlases
+- Avoid expensive operations in Update()
+- Use coroutines for async operations
+- Limit particle effects on lower-end devices
+- Profile regularly with Unity Profiler
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="React Native Integration" icon="mobile" href="/technical/react-native">
+    Learn how the mobile app integrates Unity WebGL
+  </Card>
+  
+  <Card title="Deployment Guide" icon="rocket" href="/technical/deployment">
+    Deploy the game to production hosting
+  </Card>
+  <Card title="React Native Setup" icon="mobile" href="/technical/react-native">
+    Configure mobile development environment
+  </Card>
+  <Card title="Platform Overview" icon="globe" href="/platforms/web">
+    Learn about web platform features
+  </Card>
+</CardGroup>

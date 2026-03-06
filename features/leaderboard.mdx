@@ -1,0 +1,260 @@
+---
+title: 'Leaderboard System'
+description: 'How the ranking system works and how to compete for top positions'
+icon: 'ranking-star'
+---
+
+## Overview
+
+The WPM Typing Tutor leaderboard displays the **top 10 players globally**, ranked by their highest Words Per Minute (WPM) scores. The ranking system combines typing speed and accuracy to create a competitive environment that rewards both velocity and precision.
+
+<Note>
+  The leaderboard updates in real-time and displays only your best performance, so you can practice as much as needed to achieve your personal record.
+</Note>
+
+## Current Top Rankings
+
+Here's what the competition looks like at the top:
+
+<CardGroup cols={3}>
+  <Card title="🥇 1st Place" icon="trophy" color="#ffd700">
+    **Vladi123**  
+    148 WPM · 99% accuracy
+  </Card>
+  <Card title="🥈 2nd Place" icon="medal" color="#c0c0c0">
+    **Marlon Montoya**  
+    132 WPM · 97% accuracy
+  </Card>
+  <Card title="🥉 3rd Place" icon="award" color="#cd7f32">
+    **Marco GLs**  
+    119 WPM · 95% accuracy
+  </Card>
+</CardGroup>
+
+## How Rankings Work
+
+### Primary Ranking Metric: WPM
+
+Your position on the leaderboard is determined primarily by your **Words Per Minute (WPM)** score. The higher your WPM, the higher you rank.
+
+```sql
+SELECT * FROM scores 
+ORDER BY wpm DESC 
+LIMIT 10;
+```
+
+<Accordion title="What is WPM?">
+  Words Per Minute (WPM) is the standard measure of typing speed. It calculates how many words you can type in 60 seconds, adjusted for accuracy.
+  
+  **Formula**: `WPM = (Characters Typed / 5) / Time in Minutes`
+  
+  The division by 5 is used because the average word in English is 5 characters long.
+</Accordion>
+
+### Secondary Metric: Accuracy
+
+While WPM is the primary ranking factor, **accuracy percentage** serves as a tiebreaker and quality indicator:
+
+- **99% accuracy** - Near-perfect typing with minimal errors
+- **97% accuracy** - Excellent performance with few mistakes
+- **95% accuracy** - Strong performance with occasional errors
+
+<Warning>
+  Low accuracy significantly reduces your final WPM score through error penalties. Aim for 95%+ accuracy to compete for top positions.
+</Warning>
+
+## Score Calculation
+
+Your final leaderboard score is calculated using this formula:
+
+<Steps>
+  <Step title="Calculate Raw WPM">
+    Measure your typing speed based on characters typed and time elapsed:
+    ```javascript
+    rawWPM = (totalCharacters / 5) / (timeInSeconds / 60)
+    ```
+  </Step>
+  
+  <Step title="Apply Error Penalty">
+    Each error reduces your final WPM score:
+    ```javascript
+    errorPenalty = numberOfErrors * penaltyPerError
+    ```
+    The penalty per error increases with difficulty level.
+  </Step>
+  
+  <Step title="Calculate Final WPM">
+    Subtract penalties from raw WPM:
+    ```javascript
+    finalWPM = rawWPM - errorPenalty
+    accuracyPercentage = ((totalCharacters - errors) / totalCharacters) * 100
+    ```
+  </Step>
+</Steps>
+
+<Tip>
+  The top player (Vladi123) achieved 148 WPM with 99% accuracy - meaning only 1% of characters had errors. This demonstrates the importance of balancing speed with precision.
+</Tip>
+
+## Leaderboard Display
+
+The leaderboard shows the following information for each player:
+
+| Column | Description | Example |
+|--------|-------------|----------|
+| **#** | Rank position (1-10) | 01, 02, 03... |
+| **Jugador** | Player username | Vladi123 |
+| **WPM** | Words per minute score | 148 |
+| **Precisión** | Accuracy percentage | 99% |
+
+<Info>
+  Top positions are color-coded:
+  - 🥇 **Gold** for 1st place
+  - 🥈 **Silver** for 2nd place  
+  - 🥉 **Bronze** for 3rd place
+</Info>
+
+## How to Reach the Top 10
+
+Competing for a leaderboard position requires dedication and strategy. Here's how to climb the ranks:
+
+<AccordionGroup>
+  <Accordion title="1. Master the Fundamentals">
+    - Learn proper home row positioning (F and J keys)
+    - Practice touch typing without looking at the keyboard
+    - Build muscle memory for common letter combinations
+    - Maintain correct posture and hand positioning
+  </Accordion>
+  
+  <Accordion title="2. Start with Lower Difficulties">
+    - Begin with **Fácil (Easy)** to establish proper technique
+    - Progress to **Medio (Medium)** once you achieve 95%+ accuracy
+    - Only attempt **Difícil (Hard)** when consistently typing 80+ WPM
+  </Accordion>
+  
+  <Accordion title="3. Focus on Accuracy First">
+    - Errors severely impact your final WPM score
+    - It's better to type at 100 WPM with 98% accuracy than 130 WPM with 85% accuracy
+    - The error penalty system makes speed without accuracy counterproductive
+  </Accordion>
+  
+  <Accordion title="4. Practice Regularly">
+    - Consistent daily practice yields better results than occasional long sessions
+    - Start each session with warm-up exercises
+    - Track your progress over time to identify improvement areas
+  </Accordion>
+</AccordionGroup>
+
+## Competitive Benchmarks
+
+Here's how your typing speed compares:
+
+<CardGroup cols={2}>
+  <Card title="Beginner" icon="seedling">
+    **20-40 WPM**  
+    Learning phase, building foundation
+  </Card>
+  <Card title="Intermediate" icon="chart-line">
+    **40-70 WPM**  
+    Competent typing, suitable for most work
+  </Card>
+  <Card title="Advanced" icon="fire">
+    **70-100 WPM**  
+    Professional level, very efficient
+  </Card>
+  <Card title="Expert" icon="crown">
+    **100+ WPM**  
+    Elite typing speed, leaderboard material
+  </Card>
+</CardGroup>
+
+<Note>
+  The current leaderboard record of **148 WPM** places the top player in the expert category, representing exceptional typing ability achieved through extensive practice.
+</Note>
+
+## Score Submission
+
+Your scores are automatically submitted to the leaderboard upon game completion:
+
+1. Complete a typing session in any difficulty mode
+2. Your final WPM and accuracy are calculated
+3. If your score beats your previous record, it updates automatically
+4. If your new record places in the top 10, you appear on the leaderboard
+
+<Tip>
+  Only your **highest** score appears on the leaderboard. Practice as much as you want without worrying about low scores affecting your ranking.
+</Tip>
+
+## Platform Compatibility
+
+The leaderboard is unified across all platforms:
+
+<CardGroup cols={3}>
+  <Card title="Web" icon="globe" color="#56d4dd">
+    Unity WebGL  
+    Desktop browsers
+  </Card>
+  <Card title="Android" icon="android" color="#e3c16f">
+    React Native + Expo  
+    Mobile devices
+  </Card>
+  <Card title="iOS" icon="apple">
+    React Native + Expo  
+    iPhone & iPad
+  </Card>
+</CardGroup>
+
+All players compete on the same global leaderboard regardless of platform, ensuring fair competition.
+
+## Viewing the Leaderboard
+
+Access the leaderboard from the main navigation:
+
+```bash
+# Navigate to ranking section
+./nav --section=ranking
+
+# View top scores
+SELECT * FROM scores ORDER BY wpm DESC LIMIT 10;
+```
+
+The leaderboard is visible at all times, allowing you to:
+- Check current rankings
+- See how close you are to the top 10
+- Analyze top players' WPM and accuracy combinations
+- Set personal goals based on competitive benchmarks
+
+## Tips for Leaderboard Success
+
+<Steps>
+  <Step title="Optimize Your Setup">
+    Use a comfortable keyboard with good key travel. Mechanical keyboards are popular among competitive typists for their tactile feedback and consistent actuation.
+  </Step>
+  
+  <Step title="Warm Up First">
+    Start each session with 5-10 minutes of warm-up typing on easier texts. This prepares your fingers and reduces errors during competitive attempts.
+  </Step>
+  
+  <Step title="Study Your Errors">
+    Pay attention to which keys cause you the most trouble. Practice those specific key combinations outside of competitive sessions.
+  </Step>
+  
+  <Step title="Stay Relaxed">
+    Tension in your hands and shoulders slows you down and increases errors. Maintain a relaxed posture and take breaks between attempts.
+  </Step>
+</Steps>
+
+<Warning>
+  Don't sacrifice accuracy for speed! The error penalty system means that typing slower with fewer mistakes often produces higher final WPM scores than typing faster with many errors.
+</Warning>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Typing Mechanics" icon="keyboard" href="/features/typing-mechanics">
+    Learn the details of WPM calculation and error penalties
+  </Card>
+  <Card title="Difficulty Levels" icon="gauge-high" href="/features/difficulty-levels">
+    Choose the right difficulty to maximize your score potential
+  </Card>
+</CardGroup>

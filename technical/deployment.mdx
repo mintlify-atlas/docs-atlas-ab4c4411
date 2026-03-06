@@ -1,0 +1,941 @@
+---
+title: Deployment Guide
+description: Complete guide to deploying WPM Typing Tutor web application to production hosting environments
+---
+
+## Overview
+
+This guide covers deploying the Unity WebGL build of WPM Typing Tutor to production. The web version serves as the foundation for both direct browser access and the React Native mobile app (which loads the web version in a WebView).
+
+<Info>
+  **Deployment Target**: Static web hosting
+  
+  **Build Type**: Unity WebGL
+  
+  **Total Size**: ~21 MB (compressed)
+  
+  **Requirements**: Web server with compression support
+</Info>
+
+## Pre-Deployment Checklist
+
+Before deploying, ensure you have:
+
+<Steps>
+  <Step title="Complete Unity Build">
+    - Unity WebGL build completed successfully
+    - All `.unityweb` files present in `Build/` folder
+    - `INTEGRADORA.json` configuration file generated
+    - `UnityLoader.js` included
+    - `index.html` and template files ready
+  </Step>
+  
+  <Step title="Test Locally">
+    - Game runs without errors locally
+    - All levels and features work correctly
+    - Loading screen displays properly
+    - Performance is acceptable
+  </Step>
+  
+  <Step title="Production Configuration">
+    - `developmentBuild: false` (recommended for production)
+    - Compression enabled (Brotli or Gzip)
+    - Code stripping enabled
+    - Appropriate quality settings
+  </Step>
+  
+  <Step title="Domain & Hosting Ready">
+    - Domain name configured (if applicable)
+    - Hosting provider selected
+    - SSL certificate available (HTTPS required)
+  </Step>
+</Steps>
+
+## Hosting Requirements
+
+### Server Requirements
+
+<Tabs>
+  <Tab title="Essential">
+    **Must Have:**
+    - Static file hosting
+    - HTTPS support (SSL certificate)
+    - MIME type configuration
+    - Compression support (Gzip or Brotli)
+    - CORS headers (if API integration)
+    - Minimum 100 MB storage
+  </Tab>
+  
+  <Tab title="Recommended">
+    **Should Have:**
+    - CDN integration
+    - HTTP/2 support
+    - Custom domain support
+    - Caching configuration
+    - 99.9% uptime SLA
+    - DDoS protection
+  </Tab>
+  
+  <Tab title="Optional">
+    **Nice to Have:**
+    - Auto-scaling
+    - Analytics integration
+    - Custom redirect rules
+    - Environment variables
+    - CI/CD integration
+    - Staging environment
+  </Tab>
+</Tabs>
+
+### MIME Types Configuration
+
+Configure your web server to serve Unity WebGL files with correct MIME types:
+
+```nginx nginx.conf
+# Unity WebGL MIME types
+types {
+    application/octet-stream unityweb;
+    application/wasm wasm;
+    application/javascript js;
+    application/json json;
+    text/html html htm;
+    text/css css;
+}
+
+# Enable compression for .unityweb files
+gzip on;
+gzip_types application/octet-stream application/wasm application/javascript;
+```
+
+```apache .htaccess
+# Unity WebGL MIME types
+AddType application/octet-stream .unityweb
+AddType application/wasm .wasm
+AddType application/javascript .js
+
+# Enable compression
+AddOutputFilterByType DEFLATE application/octet-stream
+AddOutputFilterByType DEFLATE application/wasm
+AddOutputFilterByType DEFLATE application/javascript
+```
+
+## Deployment Options
+
+### Option 1: Netlify (Recommended)
+
+<Note>
+  **Best for**: Easy deployment, automatic HTTPS, CDN, great free tier
+</Note>
+
+<Steps>
+  <Step title="Prepare Build">
+    Organize your files:
+    ```
+    project-root/
+    ├── index.html
+    ├── Build/
+    │   ├── INTEGRADORA.json
+    │   ├── INTEGRADORA.data.unityweb
+    │   ├── INTEGRADORA.wasm.code.unityweb
+    │   ├── INTEGRADORA.wasm.framework.unityweb
+    │   └── UnityLoader.js
+    └── TemplateData/
+        ├── UnityProgress.js
+        ├── favicon.ico
+        └── mecanografia.jpg
+    ```
+  </Step>
+  
+  <Step title="Create netlify.toml">
+    ```toml netlify.toml
+    [build]
+      publish = "."
+    
+    [[headers]]
+      for = "/*"
+      [headers.values]
+        X-Frame-Options = "SAMEORIGIN"
+        X-XSS-Protection = "1; mode=block"
+        X-Content-Type-Options = "nosniff"
+    
+    [[headers]]
+      for = "/*.unityweb"
+      [headers.values]
+        Content-Type = "application/octet-stream"
+        Content-Encoding = "gzip"
+    
+    [[headers]]
+      for = "/*.wasm"
+      [headers.values]
+        Content-Type = "application/wasm"
+    ```
+  </Step>
+  
+  <Step title="Deploy to Netlify">
+    **Option A: Drag & Drop**
+    1. Go to [netlify.com](https://netlify.com)
+    2. Drag your project folder to deploy
+    
+    **Option B: Netlify CLI**
+    ```bash
+    # Install Netlify CLI
+    npm install -g netlify-cli
+    
+    # Login
+    netlify login
+    
+    # Deploy
+    netlify deploy --prod
+    ```
+    
+    **Option C: Git Integration**
+    1. Push code to GitHub/GitLab
+    2. Connect repository in Netlify
+    3. Auto-deploy on push
+  </Step>
+  
+  <Step title="Configure Custom Domain (Optional)">
+    In Netlify dashboard:
+    - Domain settings → Add custom domain
+    - Update DNS records
+    - SSL certificate auto-generated
+  </Step>
+</Steps>
+
+### Option 2: Vercel
+
+<Note>
+  **Best for**: Next.js integration, serverless functions, global CDN
+</Note>
+
+<Steps>
+  <Step title="Install Vercel CLI">
+    ```bash
+    npm install -g vercel
+    ```
+  </Step>
+  
+  <Step title="Create vercel.json">
+    ```json vercel.json
+    {
+      "headers": [
+        {
+          "source": "/(.*)",
+          "headers": [
+            {
+              "key": "X-Frame-Options",
+              "value": "SAMEORIGIN"
+            }
+          ]
+        },
+        {
+          "source": "/**/*.unityweb",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/octet-stream"
+            },
+            {
+              "key": "Content-Encoding",
+              "value": "gzip"
+            }
+          ]
+        }
+      ]
+    }
+    ```
+  </Step>
+  
+  <Step title="Deploy">
+    ```bash
+    vercel
+    ```
+    
+    Follow prompts to deploy. Vercel automatically:
+    - Generates HTTPS certificate
+    - Provides CDN distribution
+    - Creates preview URLs
+  </Step>
+</Steps>
+
+### Option 3: GitHub Pages
+
+<Note>
+  **Best for**: Free hosting, GitHub integration, simple static sites
+</Note>
+
+<Steps>
+  <Step title="Prepare Repository">
+    ```bash
+    # Create or use existing repository
+    git init
+    git add .
+    git commit -m "Initial commit"
+    git branch -M main
+    git remote add origin https://github.com/username/wpm-typing-tutor.git
+    git push -u origin main
+    ```
+  </Step>
+  
+  <Step title="Create GitHub Actions Workflow">
+    ```yaml .github/workflows/deploy.yml
+    name: Deploy to GitHub Pages
+    
+    on:
+      push:
+        branches: [main]
+    
+    jobs:
+      deploy:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v3
+          
+          - name: Deploy to GitHub Pages
+            uses: peaceiris/actions-gh-pages@v3
+            with:
+              github_token: ${{ secrets.GITHUB_TOKEN }}
+              publish_dir: ./
+    ```
+  </Step>
+  
+  <Step title="Enable GitHub Pages">
+    1. Go to repository settings
+    2. Pages → Source → Deploy from branch
+    3. Select `gh-pages` branch
+    4. Save
+    
+    Site will be available at: `https://username.github.io/wpm-typing-tutor/`
+  </Step>
+  
+  <Step title="Configure Custom Domain (Optional)">
+    1. Add `CNAME` file with your domain
+    2. Update DNS records at your registrar
+    3. Enable HTTPS in GitHub Pages settings
+  </Step>
+</Steps>
+
+### Option 4: Traditional Web Hosting (cPanel/FTP)
+
+<Note>
+  **Best for**: Existing hosting, full control, custom server configuration
+</Note>
+
+<Steps>
+  <Step title="Configure .htaccess">
+    ```apache .htaccess
+    # Enable compression
+    <IfModule mod_deflate.c>
+      AddOutputFilterByType DEFLATE text/html text/css application/javascript
+      AddOutputFilterByType DEFLATE application/octet-stream
+      AddOutputFilterByType DEFLATE application/wasm
+    </IfModule>
+    
+    # MIME types
+    AddType application/octet-stream .unityweb
+    AddType application/wasm .wasm
+    
+    # Cache control
+    <IfModule mod_expires.c>
+      ExpiresActive On
+      ExpiresByType application/octet-stream "access plus 1 year"
+      ExpiresByType application/javascript "access plus 1 year"
+      ExpiresByType text/css "access plus 1 year"
+    </IfModule>
+    
+    # CORS (if needed)
+    <IfModule mod_headers.c>
+      Header set Access-Control-Allow-Origin "*"
+    </IfModule>
+    ```
+  </Step>
+  
+  <Step title="Upload Files">
+    **Via FTP:**
+    1. Connect with FTP client (FileZilla, Cyberduck)
+    2. Upload all files to `public_html` or `www` folder
+    3. Ensure correct permissions (644 for files, 755 for folders)
+    
+    **Via cPanel:**
+    1. File Manager → public_html
+    2. Upload zip file
+    3. Extract files
+  </Step>
+  
+  <Step title="Test Deployment">
+    Visit your domain:
+    - Check if game loads
+    - Test all functionality
+    - Verify HTTPS works
+    - Check browser console for errors
+  </Step>
+</Steps>
+
+## Compression Configuration
+
+### Gzip Compression
+
+Unity uses pre-compressed `.unityweb` files with Gzip:
+
+<CodeGroup>
+```nginx nginx - Gzip
+server {
+    # ... other config
+    
+    gzip on;
+    gzip_vary on;
+    gzip_types
+        application/octet-stream
+        application/wasm
+        application/javascript
+        text/css
+        text/html;
+    
+    location ~ \.unityweb$ {
+        gzip_static on;
+        add_header Content-Encoding gzip;
+        add_header Content-Type application/octet-stream;
+    }
+}
+```
+
+```apache Apache - Gzip
+<IfModule mod_deflate.c>
+    # Enable compression
+    SetOutputFilter DEFLATE
+    
+    # Pre-compressed Unity files
+    <FilesMatch "\.unityweb$">
+        Header set Content-Encoding gzip
+        Header set Content-Type application/octet-stream
+    </FilesMatch>
+</IfModule>
+```
+</CodeGroup>
+
+### Brotli Compression
+
+Brotli provides ~30% better compression than Gzip:
+
+```nginx nginx - Brotli
+server {
+    # ... other config
+    
+    brotli on;
+    brotli_types
+        application/octet-stream
+        application/wasm
+        application/javascript
+        text/css
+        text/html;
+    
+    location ~ \.unityweb$ {
+        brotli_static on;
+        add_header Content-Encoding br;
+        add_header Content-Type application/octet-stream;
+    }
+}
+```
+
+<Warning>
+  Ensure your Unity build uses the same compression method as your server configuration. Mismatched compression will cause loading errors.
+</Warning>
+
+## Caching Strategy
+
+### Cache Headers
+
+Optimize loading speed with proper caching:
+
+```nginx nginx - Caching
+location ~* \.(unityweb|wasm|js|css)$ {
+    expires 1y;
+    add_header Cache-Control "public, immutable";
+}
+
+location ~* \.(json)$ {
+    expires 1d;
+    add_header Cache-Control "public, must-revalidate";
+}
+
+location = /index.html {
+    expires -1;
+    add_header Cache-Control "no-cache, no-store, must-revalidate";
+}
+```
+
+```apache .htaccess - Caching
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Cache Unity files for 1 year
+    ExpiresByType application/octet-stream "access plus 1 year"
+    ExpiresByType application/wasm "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType text/css "access plus 1 year"
+    
+    # Short cache for HTML
+    ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.(unityweb|wasm|js|css)$">
+        Header set Cache-Control "max-age=31536000, public, immutable"
+    </FilesMatch>
+    
+    <FilesMatch "\.html$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+    </FilesMatch>
+</IfModule>
+```
+
+## CDN Integration
+
+### Cloudflare Setup
+
+<Steps>
+  <Step title="Add Site to Cloudflare">
+    1. Sign up at [cloudflare.com](https://cloudflare.com)
+    2. Add your domain
+    3. Update nameservers at your registrar
+  </Step>
+  
+  <Step title="Configure Settings">
+    **Speed → Optimization**
+    - Auto Minify: Enable for CSS, JS, HTML
+    - Brotli: Enabled
+    - Early Hints: Enabled
+    
+    **Caching → Configuration**
+    - Caching Level: Standard
+    - Browser Cache TTL: 1 year
+  </Step>
+  
+  <Step title="Create Page Rules">
+    ```
+    Rule 1: *.unityweb
+    - Cache Level: Cache Everything
+    - Edge Cache TTL: 1 year
+    - Browser Cache TTL: 1 year
+    
+    Rule 2: index.html
+    - Cache Level: Bypass
+    ```
+  </Step>
+  
+  <Step title="Enable HTTP/2">
+    Cloudflare automatically enables HTTP/2 for better parallel loading.
+  </Step>
+</Steps>
+
+### Custom CDN Configuration
+
+For other CDN providers (AWS CloudFront, Azure CDN, etc.):
+
+<Tabs>
+  <Tab title="AWS CloudFront">
+    ```json CloudFront Behavior
+    {
+      "PathPattern": "*.unityweb",
+      "Compress": true,
+      "MinTTL": 31536000,
+      "DefaultTTL": 31536000,
+      "MaxTTL": 31536000,
+      "ViewerProtocolPolicy": "redirect-to-https"
+    }
+    ```
+  </Tab>
+  
+  <Tab title="Azure CDN">
+    ```json Azure CDN Rule
+    {
+      "name": "Unity-Files-Caching",
+      "order": 1,
+      "conditions": [
+        {
+          "name": "UrlFileExtension",
+          "parameters": {
+            "extensions": ["unityweb", "wasm"]
+          }
+        }
+      ],
+      "actions": [
+        {
+          "name": "CacheExpiration",
+          "parameters": {
+            "cacheType": "SetIfMissing",
+            "cacheDuration": "365.00:00:00"
+          }
+        }
+      ]
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Security Configuration
+
+### HTTPS Enforcement
+
+<Warning>
+  **HTTPS is required** for Unity WebGL features like SharedArrayBuffer and certain browser APIs.
+</Warning>
+
+```nginx nginx - Force HTTPS
+server {
+    listen 80;
+    server_name yourdomain.com;
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name yourdomain.com;
+    
+    ssl_certificate /path/to/cert.pem;
+    ssl_certificate_key /path/to/key.pem;
+    
+    # ... rest of config
+}
+```
+
+```apache .htaccess - Force HTTPS
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+```
+
+### Security Headers
+
+```nginx Security Headers
+add_header X-Frame-Options "SAMEORIGIN" always;
+add_header X-Content-Type-Options "nosniff" always;
+add_header X-XSS-Protection "1; mode=block" always;
+add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+add_header Permissions-Policy "gamepad=*, keyboard-map=*" always;
+```
+
+### CORS Configuration (If Needed)
+
+If mobile app loads from different domain:
+
+```nginx CORS for Mobile App
+add_header Access-Control-Allow-Origin "https://your-mobile-app-domain.com";
+add_header Access-Control-Allow-Methods "GET, OPTIONS";
+add_header Access-Control-Allow-Headers "Content-Type";
+```
+
+## Environment-Specific Configuration
+
+### Development vs Production
+
+<Tabs>
+  <Tab title="Development">
+    ```javascript config.dev.js
+    const CONFIG = {
+      API_URL: 'http://localhost:3001',
+      DEBUG: true,
+      ANALYTICS: false,
+      SENTRY: false,
+      UNITY_BUILD: 'Build/INTEGRADORA.json'
+    };
+    ```
+  </Tab>
+  
+  <Tab title="Production">
+    ```javascript config.prod.js
+    const CONFIG = {
+      API_URL: 'https://api.yourdomain.com',
+      DEBUG: false,
+      ANALYTICS: true,
+      SENTRY: true,
+      UNITY_BUILD: 'Build/INTEGRADORA.json'
+    };
+    ```
+  </Tab>
+</Tabs>
+
+### Build Script
+
+Automate deployment preparation:
+
+```bash deploy.sh
+#!/bin/bash
+
+# Build script for WPM Typing Tutor
+
+echo "🚀 Starting deployment build..."
+
+# Clean previous build
+rm -rf dist/
+mkdir dist/
+
+# Copy Unity build files
+cp -r Build/ dist/Build/
+cp -r TemplateData/ dist/TemplateData/
+cp index.html dist/
+cp netlify.toml dist/ # or vercel.json, .htaccess, etc.
+
+# Minify HTML/CSS/JS (optional)
+if command -v html-minifier &> /dev/null; then
+  html-minifier --collapse-whitespace --remove-comments \
+    dist/index.html -o dist/index.html
+fi
+
+# Validate build
+if [ ! -f "dist/Build/INTEGRADORA.json" ]; then
+  echo "❌ Error: Unity build files not found!"
+  exit 1
+fi
+
+echo "✅ Build complete! Ready to deploy."
+echo "📦 Build size:"
+du -sh dist/
+```
+
+Make executable:
+```bash
+chmod +x deploy.sh
+./deploy.sh
+```
+
+## Post-Deployment
+
+### Verification Checklist
+
+After deployment, verify:
+
+<AccordionGroup>
+  <Accordion title="Loading & Performance" icon="gauge">
+    - [ ] Game loads without errors
+    - [ ] Loading progress bar displays correctly
+    - [ ] Initial load time < 10 seconds on fast connection
+    - [ ] Assets download properly
+    - [ ] No 404 errors in console
+  </Accordion>
+  
+  <Accordion title="Functionality" icon="check">
+    - [ ] All game levels work
+    - [ ] Keyboard input responsive
+    - [ ] Score calculation accurate
+    - [ ] Leaderboard updates (if applicable)
+    - [ ] Audio plays correctly
+  </Accordion>
+  
+  <Accordion title="Browser Compatibility" icon="browsers">
+    - [ ] Works in Chrome
+    - [ ] Works in Firefox
+    - [ ] Works in Safari
+    - [ ] Works in Edge
+    - [ ] Proper error messages on unsupported browsers
+  </Accordion>
+  
+  <Accordion title="Security & Performance" icon="shield">
+    - [ ] HTTPS enabled
+    - [ ] Security headers present
+    - [ ] Compression enabled
+    - [ ] Caching configured
+    - [ ] CDN working (if applicable)
+  </Accordion>
+  
+  <Accordion title="Mobile App Integration" icon="mobile">
+    - [ ] React Native app can load game
+    - [ ] Touch input works
+    - [ ] Performance acceptable on mobile
+    - [ ] No CORS errors
+  </Accordion>
+</AccordionGroup>
+
+### Performance Testing
+
+```bash
+# Test with curl
+curl -I https://yourdomain.com
+
+# Check compression
+curl -H "Accept-Encoding: gzip" -I https://yourdomain.com/Build/INTEGRADORA.data.unityweb
+
+# Check response time
+curl -w "@curl-format.txt" -o /dev/null -s https://yourdomain.com
+```
+
+Create `curl-format.txt`:
+```
+time_namelookup:  %{time_namelookup}s
+time_connect:  %{time_connect}s
+time_appconnect:  %{time_appconnect}s
+time_starttransfer:  %{time_starttransfer}s
+time_total:  %{time_total}s
+```
+
+## Monitoring & Analytics
+
+### Basic Analytics
+
+Integrate Google Analytics or similar:
+
+```html index.html
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_MEASUREMENT_ID');
+  
+  // Track game events
+  function trackGameEvent(action, label, value) {
+    gtag('event', action, {
+      'event_category': 'Game',
+      'event_label': label,
+      'value': value
+    });
+  }
+</script>
+```
+
+### Error Tracking
+
+Integrate Sentry for error monitoring:
+
+```html Error Tracking
+<script src="https://browser.sentry-cdn.com/7.x.x/bundle.min.js"></script>
+<script>
+  Sentry.init({
+    dsn: 'YOUR_SENTRY_DSN',
+    environment: 'production',
+    beforeSend(event) {
+      // Filter out Unity internal errors if needed
+      return event;
+    }
+  });
+</script>
+```
+
+## Troubleshooting Deployment Issues
+
+<AccordionGroup>
+  <Accordion title="Game doesn't load" icon="triangle-exclamation">
+    **Common causes:**
+    - Incorrect file paths
+    - Missing .unityweb files
+    - MIME type not configured
+    - Compression mismatch
+    
+    **Debug steps:**
+    1. Open browser console (F12)
+    2. Check for 404 errors
+    3. Verify file paths in INTEGRADORA.json
+    4. Test without compression
+    5. Check server error logs
+  </Accordion>
+  
+  <Accordion title="Slow loading" icon="hourglass">
+    **Solutions:**
+    - Enable compression (Brotli preferred)
+    - Use CDN
+    - Enable HTTP/2
+    - Optimize Unity build (code stripping)
+    - Reduce asset quality
+    - Check server bandwidth
+  </Accordion>
+  
+  <Accordion title="CORS errors" icon="globe">
+    **When this happens:**
+    - Loading from different domain
+    - Mobile app integration
+    - API calls
+    
+    **Solution:**
+    ```nginx
+    add_header Access-Control-Allow-Origin "*";
+    ```
+  </Accordion>
+  
+  <Accordion title="HTTPS certificate errors" icon="lock">
+    **Solutions:**
+    - Use Let's Encrypt (free)
+    - Use hosting provider's SSL
+    - Check certificate expiration
+    - Verify domain matches certificate
+  </Accordion>
+</AccordionGroup>
+
+## Continuous Deployment
+
+### GitHub Actions
+
+Automate deployment on git push:
+
+```yaml .github/workflows/deploy.yml
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Deploy to Netlify
+        uses: netlify/actions/cli@master
+        with:
+          args: deploy --prod --dir=.
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+```
+
+### GitLab CI/CD
+
+```yaml .gitlab-ci.yml
+stages:
+  - deploy
+
+deploy_production:
+  stage: deploy
+  script:
+    - npm install -g netlify-cli
+    - netlify deploy --prod --dir=.
+  only:
+    - main
+  environment:
+    name: production
+    url: https://yourdomain.com
+```
+
+## Hosting Cost Comparison
+
+| Provider | Free Tier | Paid Plans | Best For |
+|----------|-----------|------------|----------|
+| **Netlify** | 100GB bandwidth/month | From $19/mo | Easy deployment, auto-SSL |
+| **Vercel** | 100GB bandwidth/month | From $20/mo | Next.js, serverless |
+| **GitHub Pages** | Unlimited (soft limit) | Free only | Simple static sites |
+| **Cloudflare Pages** | Unlimited bandwidth | Free | Best free option |
+| **AWS S3 + CloudFront** | 50GB free (1st year) | Pay per use | Large scale |
+| **DigitalOcean** | No free tier | From $4/mo | Full control |
+
+<Note>
+  For WPM Typing Tutor's ~21MB build size and expected traffic, the free tiers of Netlify, Vercel, or Cloudflare Pages should be sufficient.
+</Note>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Unity Setup" icon="unity" href="/technical/unity-setup">
+    Review Unity WebGL build configuration
+  </Card>
+  <Card title="React Native App" icon="mobile" href="/technical/react-native">
+    Configure mobile app to load deployed game
+  </Card>
+  <Card title="Platform Guide" icon="globe" href="/platforms/web">
+    User guide for web platform
+  </Card>
+  <Card title="Unity Setup" icon="code" href="/technical/unity-setup">
+    Unity project configuration
+  </Card>
+</CardGroup>
