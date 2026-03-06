@@ -1,0 +1,63 @@
+{
+  "projectType": "saas",
+  "projectName": "WPM Typing Tutor",
+  "projectDescription": "A multiplataform typing tutor game built with Unity WebGL and React Native to improve typing speed and accuracy.",
+  "theme": "aspen",
+  "primaryColor": "#39d353",
+  "lightColor": "#56d4dd",
+  "darkColor": "#e3c16f",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": ["introduction", "quickstart"]
+          },
+          {
+            "group": "Game Features",
+            "pages": ["features/difficulty-levels", "features/leaderboard", "features/typing-mechanics"]
+          },
+          {
+            "group": "Platforms",
+            "pages": ["platforms/web", "platforms/android", "platforms/ios"]
+          },
+          {
+            "group": "Guides",
+            "pages": ["guides/how-to-play", "guides/keyboard-positioning", "guides/improve-speed"]
+          }
+        ]
+      },
+      {
+        "tab": "Resources",
+        "groups": [
+          {
+            "group": "Technical",
+            "pages": ["technical/unity-setup", "technical/react-native", "technical/deployment"]
+          },
+          {
+            "group": "About",
+            "pages": ["about/project", "about/changelog"]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Unity WebGL-powered typing game",
+    "Three difficulty levels (easy, medium, hard)",
+    "Real-time WPM and accuracy tracking",
+    "Global leaderboard with ranking system",
+    "Multiplataform support (web, Android, iOS)",
+    "Keyboard positioning guide and tutorials",
+    "Home row typing instruction"
+  ],
+  "publicApiSurface": [
+    "Web game interface (Unity WebGL)",
+    "Start game command with difficulty levels",
+    "Leaderboard ranking system",
+    "Score tracking (WPM and accuracy metrics)",
+    "Mobile app (React Native + Expo Go)"
+  ]
+}
